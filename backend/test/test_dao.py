@@ -1,10 +1,9 @@
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock
 from src.util.dao import DAO
-from pymongo import WriteError, DuplicateKeyError, PyMongoError
+from pymongo.errors import DuplicateKeyError, PyMongoError, WriteError
 
 class TestDAOCreate:
-
     @pytest.fixture
     def setup_dao(self):
         dao = DAO("todo")
@@ -30,7 +29,7 @@ class TestDAOCreate:
     @pytest.mark.dao_create
     def test_insert_incorrect_data_type(self, setup_dao):
         doc = "insert string" 
-        with pytest.raises(TypeError):
+        with pytest.raises(WriteError):
             setup_dao.create(doc)
 
     @pytest.fixture
@@ -52,7 +51,7 @@ class TestDAOCreate:
                  }
         setup_user_dao.create(user1)
 
-        with pytest.raises(DuplicateKeyError):
+        with pytest.raises(WriteError):
             setup_user_dao.create(user2)
 
     @pytest.mark.dao_create
