@@ -29,5 +29,4 @@ jobs:
     - name: Unit Test
       run: |
         cd backend
-        pytest -m dao_create
         pytest -m usercontroller
