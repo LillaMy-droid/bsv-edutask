@@ -13,8 +13,11 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  defaults:
+    run:
+      working-directory: backend
 
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,4 +33,4 @@ jobs:
     - name: Unit Test
       run: |
         pytest -m dao_create
-        then pytest -m usercontroller
+        pytest -m usercontroller
