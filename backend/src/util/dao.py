@@ -23,7 +23,7 @@ class DAO:
         """
 
         # load the local mongo URL (something like mongodb://localhost:27017)
-        LOCAL_MONGO_URL = dotenv_values('.env').get('MONGO_URL')
+        LOCAL_MONGO_URL = dotenv_values('backend/.env').get('MONGO_URL')
         # check out of the environment (which can be overridden by the docker-compose file) also specifies an URL, and use that instead if it exists
         MONGO_URL = os.environ.get('MONGO_URL', LOCAL_MONGO_URL)
 
