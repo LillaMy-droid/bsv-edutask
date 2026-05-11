@@ -14,8 +14,7 @@ permissions:
 
 jobs:
   defaults:
-    run:
-      working-directory: backend
+    working-directory: backend
 
   test:
     runs-on: ubuntu-latest
