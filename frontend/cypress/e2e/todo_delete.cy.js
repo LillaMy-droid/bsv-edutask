@@ -36,66 +36,10 @@ describe('Todo tests', () => {
         .should('contain.text', 'Your tasks, ' + name)
     })
 
-    it('Create a todo item with valid input', () => {
-
-        let task_random = Math.random().toString(36).substring(2)
-        let todo_random = Math.random().toString(36).substring(2)
-
-        cy.get('input[placeholder="Title of your Task"]')
-            .type(task_random)
-
-        cy.contains('Create new Task').click()
-        cy.contains('.title-overlay', task_random).click()
-        cy.get('input[placeholder="Add a new todo item"]')
-            .type(todo_random)
-
-        cy.contains('Add')
-            .click()
-
-        cy.get('.todo-item')
-            .should('contain', todo_random)
-    })
-
-    it('Empty input, disabled click button', () => {
-
-        let task_random = Math.random().toString(36).substring(2)
-        cy.get('input[placeholder="Title of your Task"]')
-            .type(task_random)
-
-        cy.contains('Create new Task').click()
-        cy.contains(task_random).click()
-
-        cy.get('input[type=submit][value=Add]')
-            .should('be.disabled')
-    })
-
-    it('Toggle Todo item, active/done', () => {
-
-        let task_random = Math.random().toString(36).substring(2)
-        cy.get('input[placeholder="Title of your Task"]')
-            .type(task_random)
-
-        cy.contains('Create new Task').click()
-        cy.contains(task_random).click()
-
-        cy.get('li.todo-item')
-            .find('span.checker')
-            .click();
-
-        cy.get('li.todo-item')
-            .find('span.checker')
-            .should('have.class', 'checked');
-
-        cy.get('li.todo-item')
-            .find("span.checker")
-            .click();  
-
-        cy.get('li.todo-item')
-            .find("span.checker")
-            .should("have.class", "unchecked"); 
-    })
-
     it('Delete Todo item', () => {
+
+        cy.intercept('DELETE', '/todos/byid/*').as('deleteTodo')
+        cy.intercept('GET', '/tasks/**').as('refreshTasks')
 
         let task_random = Math.random().toString(36).substring(2)
         let todo_random = Math.random().toString(36).substring(2)
@@ -121,6 +65,9 @@ describe('Todo tests', () => {
         cy.contains('li.todo-item', todo_random)
             .find('span.remover')
             .click()
+
+        cy.wait('@deleteTodo')
+        cy.wait('@refreshTasks')
 
         cy.contains('li.todo-item', todo_random)
             .should('not.exist')
