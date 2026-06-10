@@ -31,8 +31,29 @@ class TestEmailLogin:
         assert result == test_user[0]
         assert result["email"] == test_user[0]["email"]
 
+    @pytest.mark.usercontroller
+    def test_email_with_num(self, user_controller_mock, database_mock):
+        test_user = [
+            {"name": "user_one", "email": "test123@email.com"},
+        ]
+        valid_email = "test123@email.com"
+        database_mock.find.return_value = test_user
+
+        result = user_controller_mock.get_user_by_email(valid_email)
+        
+        assert result == test_user[0]
+        assert result["email"] == test_user[0]["email"]
+
+    @pytest.mark.usercontroller
     def test_invalid_email(self, user_controller_mock):
         email = "invalid.com"
+     
+        with pytest.raises(ValueError, match=f"invalid email address"):
+            user_controller_mock.get_user_by_email(email)
+
+    @pytest.mark.usercontroller
+    def test_invalid_email_special_char(self, user_controller_mock):
+        email = "name_123?@invalid.com"
      
         with pytest.raises(ValueError, match=f"invalid email address"):
             user_controller_mock.get_user_by_email(email)
