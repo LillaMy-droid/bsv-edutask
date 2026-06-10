@@ -7,7 +7,7 @@ class TestDAOCreate:
     @pytest.fixture
     def setup_dao(self):
         dao = DAO("todo")
-        dao.collection.delete_many({})  
+        dao.collection.delete_many({})
         yield dao
         dao.collection.delete_many({})
 
